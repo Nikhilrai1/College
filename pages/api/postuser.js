@@ -7,13 +7,20 @@ var jwt = require('jsonwebtoken');
 const handler = async (req, res) => {
     try {
         if (req.method == "POST") {
-            const { name, email, password, address, grade } = req.body;
+            const { name, email, password, address, grade, stream, group, mobile, gender, dob, profile } = req.body;
+            console.log(gender,dob)
             let student = new Student({
                 name,
+                gender,
+                dob,
                 email,
                 password: CryptoJS.AES.encrypt(password, process.env.SECRET_KEY).toString(),
                 address,
                 grade,
+                stream,
+                group,
+                mobile,
+                profile
             });
             let saveStudent = await student.save();
             console.log(saveStudent);

@@ -1,5 +1,5 @@
 import connectDB from "../../middleware/mongoose";
-import Student from "../../models/Student";
+import Teacher from "../../models/Teacher";
 var CryptoJS = require("crypto-js");
 var jwt = require('jsonwebtoken');
 
@@ -7,32 +7,33 @@ var jwt = require('jsonwebtoken');
 const handler = async (req, res) => {
     if (req.method == "POST") {
         try {
-            const { email,password } = req.body;
-            const student = await Student.findOne({ email: email });
-            if (student) {
-                let bytes = CryptoJS.AES.decrypt(student.password, process.env.SECRET_KEY);
+            const { email, password } = req.body;
+            const teacher = await Teacher.findOne({ email: email });
+            if (teacher) {
+                let bytes = CryptoJS.AES.decrypt(teacher.password, process.env.SECRET_KEY);
                 let orginalPassword = bytes.toString(CryptoJS.enc.Utf8);
                 if (password == orginalPassword) {
                     let token = jwt.sign({
-                        name: student.name,
-                        gender: student.gender,
-                        dob: student.dob,
-                        email: student.email,
-                        address: student.address,
-                        grade: student.grade,
-                        stream: student.stream,
-                        group: student.group,
-                        mobile: student.mobile,
-                        profile: student.profile,
-                        isTeacher: student.isTeacher
+                        name: teacher.name,
+                        gender: teacher.gender,
+                        subject: teacher.subject,
+                        dob: teacher.dob,
+                        email: teacher.email,
+                        address: teacher.address,
+                        mobile: teacher.mobile,
+                        profile: teacher.profile,
+                        isTeacher: teacher.isTeacher
                     }, process.env.SECRET_KEY);
+                    console.log("hello")
                     console.log(token)
                     res.status(200).json({ success: true, token: token })
                 } else {
+                    console.log("invalid")
                     res.status(400).json({ success: false, error: "Invalid credentials" });
                 }
             }
             else {
+                console.log("Invalid")
                 res.status(400).json({ success: false, error: "Invalid credentials" });
             }
         }

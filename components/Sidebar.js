@@ -3,9 +3,9 @@ import React from 'react'
 const Sidebar = () => {
     return (
         <div style={{
-            marginTop: "75px",
+            top: "75px",
             position: "fixed",
-
+            left:0
         }}
             className="h-[calc(100%-75px)]" >
             <aside className="w-64 h-full" aria-label="Sidebar">
