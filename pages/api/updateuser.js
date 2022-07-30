@@ -9,31 +9,56 @@ const handler = async (req, res) => {
     const authHeader = req.headers.authorization;
     const myToken = authHeader.split(' ')[1];
     let user = jwt.verify(myToken, process.env.SECRET_KEY);
-    if (req.method != "PUT") {
-        res.status(403).json("This method is not valid");
-        return;
-    }
+    console.log("hello")
+    // if (req.method != "PUT") {
+    //     res.status(403).json("This method is not valid");
+    //     return;
+    // }
     try {
         if (user.isAdmin || user.isStudent) {
-            const { name, email, password, address, grade } = req.body;
-            let student = await Student.findOneAndUpdate({ email: email }, {
-                name: name,
-                password: password,
-                address: address,
-                grade: grade
-            }, { new: true })
-            res.status(201).json({ success: true, message: "user updated successfully", info: student });
+            const { name, email, gender, dob, stream, group, mobile, profile, address, grade } = req.body;
+            const userStudent = await Student.findOne({ email: user.email });
+            console.log("student")
+            if (userStudent) {
+                let student = await Student.findOneAndUpdate({ email: user.email }, {
+                    name: name != "" ? name : user.name,
+                    gender: gender != "" ? gender : user.gender,
+                    dob: dob != "" ? dob : user.dob,
+                    address: address != "" ? address : user.address,
+                    grade: grade != "" ? grade : user.grade,
+                    stream: stream != "" ? stream : user.stream,
+                    group: group != "" ? group : user.group,
+                    mobile: mobile != "" ? mobile : user.mobile,
+                    profile: profile != "" ? profile : user.profile
+                }, { new: true })
+                console.log(student)
+                res.status(201).json({ success: true, message: "user updated successfully", info: student });
+            }
+            else {
+                res.status(404).json({ success: false, message: "user not found", error: "User not found"});
+            }
         }
         else if (user.isAdmin || user.isTeacher) {
-            const { name, email, password, address, grade } = req.body;
-            const user = await teacher.findOne({ email: email });
-            let student = await Student.findOneAndUpdate({ email: email }, {
-                name: name,
-                password: password,
-                address: address,
-                grade: grade
-            }, { new: true })
-            res.status(201).json({ success: true, message: "user updated successfully", info: student });
+            const { name, email, subject, address, mobile, gender, dob, profile } = req.body;
+            const userTeacher = await Teacher.findOne({ email: user.email });
+            console.log("Teacher",userTeacher)
+            if (userTeacher) {
+                let teacher = await Teacher.findOneAndUpdate({ email: user.email }, {
+                    name: name != "" ? name : user.name,
+                    gender: gender != "" ? gender : user.gender,
+                    dob: dob != "" ? dob : user.dob,
+                    address: address != "" ? address : user.address,
+                    subject: subject != "" ? subject : user.subject,
+                    mobile: mobile != "" ? mobile : user.mobile,
+                    profile: profile != "" ? profile : user.profile
+                }, { new: true })
+                console.log(teacher)
+                res.status(201).json({ success: true, message: "user updated successfully", info: teacher });
+            }
+            else {
+                res.status(404).json({ success: false, message: "user not found", error: "User not found"});
+            }
+
         }
     }
     catch (error) {

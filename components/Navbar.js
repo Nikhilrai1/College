@@ -135,11 +135,12 @@ const Navbar = () => {
                 </div>
                 <div className="flex justify-between items-center text-gray-600">
                     <div className="relative cursor-pointer m-3">
-                        <GrNotification className="h-7 w-7 rounded-full" />
+                       <GrNotification className="h-7 w-7 rounded-full" />
                         <span className="absolute h-4 w-4 text-xs rounded-full bg-red-500 flex justify-center items-center p-1 text-white top-0 right-0">1</span>
                     </div>
                     <div className="relative group cursor-pointe hover:text-blue-500 m-3">
-                        <FaUserCircle className="cursor-pointer h-7 w-7 rounded-full" />
+                    {(token && auth.profile != "") && <img src={auth.profile} className="h-7 w-7 rounded-full" />}
+                        {(!token || auth.profile == "") && <FaUserCircle className="h-7 w-7 rounded-full" />}
                         <div style={{ right: "-5px", width: "120px" }} className={`mt-1 absolute hidden group-hover:block rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 focus:outline-none`} role="menu" aria-orientation="vertical" aria-labelledby="menu-button" tabIndex="-1">
                             <div className="py-1 " role="none">
                                 {!token && <Link href={"/login"}><a href="#" className="hover:text-blue-500 text-gray-700 block px-4 py-2 text-sm" role="menuitem" tabIndex="-1" id="menu-item-0">Student Login</a></Link>}
